@@ -6,6 +6,6 @@ const { test } = Deno;
 
 test('Placeholder', async () => {
   const testFile = await readFileStr('/Users/matthewnoakes/repos/multipart-related/sample1.http');
-  const parsed = await parseMultipartRelated(testFile);
-  assertEquals(parsed.parts.length, 3);
+  const parts = await parseMultipartRelated(testFile, 'BOUNDARY');
+  assertEquals(parts.length, 3);
 });

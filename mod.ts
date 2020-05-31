@@ -1,1 +1,1 @@
-export { MimePart, MultipartRelated, parseMultipartRelated } from './app.ts';
+export { MimePart, parseMultipartRelated } from './app.ts';

@@ -7,25 +7,16 @@ export type MimePart = {
   content: string;
 }
 
-export type MultipartRelated = {
-  httpHeaders: Record<string, string>;
-  parts: MimePart[];
-}
-
-export const parseMultipartRelated = async (rawBody: string) : Promise<MultipartRelated> => {
+export const parseMultipartRelated = async (rawBody: string, boundary: string) : Promise<MimePart[]> => {
   
   const reader = new TextProtoReader(new BufReader(stringsReader(rawBody)));
   
-  /** A container for the full message including HTTP headers and the headers and content of each MIME part */
-  const multipart: MultipartRelated = {
-    httpHeaders: {},
-    parts: [],
-  };
+   const parts: MimePart[] = [];
   
   /** A function which adds a blank MIME part to the end of the parts array, and returns it for populating */
   const newPart = () => {
-    multipart.parts.push({ headers: {}, content: '' });
-    return multipart.parts[multipart.parts.length - 1];
+    parts.push({ headers: {}, content: '' });
+    return parts[parts.length - 1];
   }
   
   /** A function which writes a source iterable containing MIME headers to a target object as key-value pairs */
@@ -34,16 +25,6 @@ export const parseMultipartRelated = async (rawBody: string) : Promise<Multipart
       target[h[0].toLowerCase()] = h[1];
     }
   }
-  
-  const httpHeaders = await reader.readMIMEHeader() || new Headers();
-  populateHeaders(httpHeaders.entries(), multipart.httpHeaders);
-  
-  const boundary = (() => {
-    const BOUNDARY_PARSER = /;\s*boundary=(.*?)\s*(;|$)/i;
-    const parsed = BOUNDARY_PARSER.exec(multipart.httpHeaders['content-type']);
-    let boundary = (parsed && parsed.length) ? (parsed[1] || parsed[2]) : "";
-    return boundary.replace(/\"/g, "");
-  })();
   
   const separator = `--${boundary}`;
   const terminator = `--${boundary}--`;
@@ -61,5 +42,5 @@ export const parseMultipartRelated = async (rawBody: string) : Promise<Multipart
     }
   } 
 
-  return multipart;
+  return parts;
 }
