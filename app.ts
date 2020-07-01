@@ -1,5 +1,5 @@
 import { BufReader } from "https://deno.land/std/io/bufio.ts";
-import { stringsReader } from "https://deno.land/std/io/util.ts";
+import { StringReader } from "https://deno.land/std/io/readers.ts";
 import { TextProtoReader } from 'https://deno.land/std/textproto/mod.ts';
 
 export type MimePart = {
@@ -9,7 +9,7 @@ export type MimePart = {
 
 export const parseMultipartRelated = async (rawBody: string, boundary: string) : Promise<MimePart[]> => {
   
-  const reader = new TextProtoReader(new BufReader(stringsReader(rawBody)));
+  const reader = new TextProtoReader(new BufReader(new StringReader(rawBody)));
   
    const parts: MimePart[] = [];
   
