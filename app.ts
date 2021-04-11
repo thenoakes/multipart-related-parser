@@ -1,6 +1,6 @@
-import { BufReader } from "https://deno.land/std/io/bufio.ts";
-import { StringReader } from "https://deno.land/std/io/readers.ts";
-import { TextProtoReader } from 'https://deno.land/std/textproto/mod.ts';
+import { BufReader } from "https://deno.land/std@0.92.0/io/bufio.ts";
+import { StringReader } from "https://deno.land/std@0.92.0/io/readers.ts";
+import { TextProtoReader } from 'https://deno.land/std@0.92.0/textproto/mod.ts';
 
 export type MimePart = {
   headers: Record<string, string>;
